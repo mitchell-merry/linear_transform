@@ -7,10 +7,15 @@ class Plane {
     constructor(transformMatrix) {
         this.transformMatrix = transformMatrix;
         this.inverseTransformMatrix = transformMatrix.inverse2by2();
+
+        this.points = []
     }
 
     createPoint(x, y, type='real') {
-        return new Point(this, x, y, type);
+        const p = new Point(this, x, y, type);
+        this.points.push(p);
+
+        return p;
     }
 
     transform(v) {
@@ -23,13 +28,26 @@ class Plane {
 
     drawGrid() {
         stroke(GRID_COLOUR);
+        strokeWeight(1);
 
         for(let x = -5; x <= 5; x++) {
             const top = this.createPoint(x, -5).pixel;
             const bot = this.createPoint(x, 5).pixel;
 
             linePVecs(top, bot);
+
+            
+            const left = this.createPoint(-5, x).pixel;
+            const right = this.createPoint(5, x).pixel;
+
+            linePVecs(left, right);
         }
+    }
+
+    update() {
+        this.points.forEach(point => {
+            point.update();
+        });
     }
 
     // drawGrid() {

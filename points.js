@@ -7,10 +7,12 @@ class Point {
 
         if (type === 'real') {
             this.real = [x, y];
+            this.inv = this.plane.inverseTransform(this.real);
             this.pixel = this._toPixel(this.real);
         } else if(type === 'pixel') {
             this.pixel = [x, y];
             this.real = this._toReal(this.pixel);
+            this.inv = this.plane.inverseTransform(this.real);
         }
     }
 
@@ -25,7 +27,7 @@ class Point {
         // https://p5js.org/reference/#/p5.Vector/magSq
         push();
         stroke(color);
-        strokeWeight(1);
+        strokeWeight(LINE_WIDTH);
         fill(color);
 
         translate(baseVec.x, baseVec.y);
@@ -39,9 +41,13 @@ class Point {
         pop();
     }
 
+    update() {
+        this.pixel = this._toPixel(this.real);
+    }
+
     _toPixel(real) {
         const [ offX, offY ] = OFFSET;
-        const [ invX, invY ] = this.plane.inverseTransform(real);
+        const [ invX, invY ] = this.inv;
 
         return [
             (invX - offX) * PIXEL_SCALE + width / 2,

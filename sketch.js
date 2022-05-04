@@ -13,13 +13,14 @@ var gridSpacing = 1;
 var basePlane;
 var ORIGIN, MOUSE;
 var testPoints = Array.from({length: 10}, (_, row) => Array.from({length: 10}, (__, col) => ([row-5, col-5]))).flat();
+var v;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
     textSize(25);
 
     basePlane = new Plane(new Matrix([
-        [1, 0],
+        [1, 1],
         [0, 1]
     ]));
 
@@ -28,8 +29,8 @@ function setup() {
     console.log(testPoints);
     testPoints = testPoints.map(([x, y]) => basePlane.createPoint(x, y, 'real'));
     testPoints.forEach((p, i) => console.log(`${i}, ${p.toString()}`));
-
-    console.log(basePlane.getBorder());
+    v = basePlane.createPoint(1, 1.5);
+    // console.log(basePlane.getBorder());
 }
 
 function draw() {
@@ -40,46 +41,24 @@ function draw() {
     ORIGIN.draw();
     testPoints.forEach(p => p.draw());
 
+    v.drawVector();
+
     MOUSE.draw();
 
     fill('white');
     text(MOUSE.toString(), 10, 40);
 
-    // let mousePoint = new PixelPoint(mouseX, mouseY);
-
-    // IHAT = mousePoint.toRealPoint();
-
-    // drawGrid(transform);
-
-    // ORIGIN.draw();
-
-    // draw basis vectors
-    // IHAT.drawVector(ORIGIN, IHAT_COLOUR);
-    // JHAT.drawVector(ORIGIN, JHAT_COLOUR);
 }
 
-// function drawMouse() {
-//     if(mousePoint.x != 0 || mousePoint.y != 0) mousePoint.drawVector(undefined, YELLOW);
-
-//     text(mousePoint.toRealPoint().toString(), 10, 40);
-//     text(mousePoint.toString(), 10, 70);
-// }
-
-// /**
-//  * 
-//  * returns [ top, right, down, left ]
-//  */
-// function getBorderReal(transform) {
-//     // const [ [top, left], ]
-
-//     return [
-//         PixelPoint.toRealY(0),
-//         PixelPoint.toRealX(width),
-//         PixelPoint.toRealY(height),
-//         PixelPoint.toRealX(0)
-//     ]
-// }
+function mouseDragged(event) {
+    OFFSET = [
+        OFFSET[0] - event.movementX/PIXEL_SCALE,
+        OFFSET[1] + event.movementY/PIXEL_SCALE,
+    ];
+    basePlane.update();
+}
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+    basePlane.update();
 }
