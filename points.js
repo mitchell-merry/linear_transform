@@ -6,8 +6,10 @@ class Point {
         this.plane = plane;
 
         if (type === 'real') {
-            this.real = [x, y];
-            this.inv = this.plane.inverseTransform(this.real);
+            this.real = this.plane.transform([x, y]);
+            // this.inv = this.plane.inverseTransform(this.real);
+            // console.log(this.real);
+            this.inv = [x, y];
             this.pixel = this._toPixel(this.real);
         } else if(type === 'pixel') {
             this.pixel = [x, y];
@@ -61,7 +63,7 @@ class Point {
 
         return this.plane.transform([
             (pixelX - (width  / 2)) / PIXEL_SCALE + offX,
-            -(pixelY - (height / 2)) / PIXEL_SCALE - offY,
+            -(pixelY - (height / 2)) / PIXEL_SCALE + offY,
         ]);
     }
 

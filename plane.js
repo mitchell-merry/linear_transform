@@ -26,8 +26,8 @@ class Plane {
         return this.inverseTransformMatrix.transformVector(v);
     }
 
-    drawGrid() {
-        stroke(GRID_COLOUR);
+    drawGrid(colour=GRID_COLOUR) {
+        stroke(colour);
         strokeWeight(1);
 
         for(let x = -5; x <= 5; x++) {
@@ -83,7 +83,7 @@ class Plane {
         const [ left, top ] = this.createPoint(0, 0, 'pixel').real;
         const [ right, bottom ] = this.createPoint(width, height, 'pixel').real;
 
-        console.log(top, right, left, bottom);
+        // console.log(top, right, left, bottom);
     }
 }
 
